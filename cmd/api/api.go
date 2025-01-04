@@ -50,5 +50,15 @@ func (app *application) mount() http.Handler {
 
 // Config
 type config struct {
-	addr string
+	addr     string
+	dbConfig dbConfig
+}
+
+// DB Config
+
+type dbConfig struct {
+	addr         string
+	maxOpenConns int
+	maxIdleConns int
+	maxIdleTime  string
 }
