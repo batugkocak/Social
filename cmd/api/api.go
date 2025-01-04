@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/batugkocak/social/internal/store"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -12,6 +13,7 @@ import (
 // Application
 type application struct {
 	config config
+	store  store.Storage
 }
 
 func (app *application) run(mux http.Handler) error {
