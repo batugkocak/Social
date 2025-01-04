@@ -1,18 +1,13 @@
 package store
 
 import (
-	"context"
 	"database/sql"
 )
 
 // app.store.Posts.GetById()
 type Storage struct {
-	Posts interface {
-		Create(context.Context) error
-	}
-	Users interface {
-		Create(context.Context) error
-	}
+	Posts PostRepository
+	Users UserRepository
 }
 
 func NewStorage(db *sql.DB) Storage {
@@ -21,13 +16,3 @@ func NewStorage(db *sql.DB) Storage {
 		Users: &UsersStore{db},
 	}
 }
-
-// Alternative, does the same job.
-// type Storage interface {
-// 	Posts() PostRepository
-// 	Comments() CommentRepository
-// 	Users() UserRepository
-// 	Followers() FollowerRepository
-// 	AuthTokens() AuthTokenRepository
-// 	Roles() RoleRepository
-// }

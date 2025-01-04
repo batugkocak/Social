@@ -5,6 +5,12 @@ import (
 	"database/sql"
 )
 
+// PostRepository
+type PostRepository interface {
+	Create(context.Context) error
+}
+
+// PostRepository Implementation
 type PostsStore struct {
 	db *sql.DB
 }

@@ -5,6 +5,12 @@ import (
 	"database/sql"
 )
 
+// UserRepository
+type UserRepository interface {
+	Create(context.Context) error
+}
+
+// UserRepository Implementation
 type UsersStore struct {
 	db *sql.DB
 }
