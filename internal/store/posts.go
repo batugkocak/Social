@@ -11,10 +11,11 @@ type PostRepository interface {
 }
 
 // PostRepository Implementation
-type PostsStore struct {
+type PostStore struct {
 	db *sql.DB
 }
 
-func (s *PostsStore) Create(ctx context.Context) error {
+func (s *PostStore) Create(ctx context.Context) error {
+
 	return nil
 }

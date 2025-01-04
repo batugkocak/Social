@@ -11,10 +11,10 @@ type UserRepository interface {
 }
 
 // UserRepository Implementation
-type UsersStore struct {
+type UserStore struct {
 	db *sql.DB
 }
 
-func (s *UsersStore) Create(ctx context.Context) error {
+func (s *UserStore) Create(ctx context.Context) error {
 	return nil
 }
