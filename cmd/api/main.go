@@ -25,6 +25,9 @@ func main() {
 		log.Panic(err)
 	}
 
+	defer db.Close()
+	log.Println("DB connection pool established")
+
 	store := store.NewStorage(db)
 
 	app := &application{
