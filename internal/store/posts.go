@@ -3,6 +3,8 @@ package store
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/lib/pq"
@@ -22,6 +24,7 @@ type Post struct {
 // PostRepository
 type PostRepository interface {
 	Create(context.Context, *Post) error
+	GetById(context.Context, int64) (*Post, error)
 }
 
 // PostRepository Implementation
@@ -44,4 +47,32 @@ func (s *PostStore) Create(ctx context.Context, post *Post) error {
 	}
 
 	return nil
+}
+
+func (s *PostStore) GetById(ctx context.Context, postID int64) (*Post, error) {
+	query := `
+	SELECT id, user_id, content, title, tags, created_at, updated_at
+	FROM posts 
+	WHERE id = $1` // Change user_id to id
+
+	fmt.Println(postID)
+	var post Post
+	err := s.db.QueryRowContext(ctx, query, postID).Scan(
+		&post.ID,
+		&post.UserId,
+		&post.Content,
+		&post.Title,
+		pq.Array(&post.Tags),
+		&post.CreatedAt,
+		&post.UpdatedAt,
+	)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrNotFound
+		default:
+			return nil, err
+		}
+	}
+	return &post, nil
 }

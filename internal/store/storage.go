@@ -2,6 +2,11 @@ package store
 
 import (
 	"database/sql"
+	"errors"
+)
+
+var (
+	ErrNotFound = errors.New("Resource not found.")
 )
 
 // app.store.Posts.GetById()
