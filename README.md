@@ -30,6 +30,7 @@ cd social-go
 Create a `.env` file in the root directory:
 
 ```env
+ENV = development
 ADDR=:8080
 DB_ADDR=postgres://admin:adminPassword@localhost/social?sslmode=disable
 DB_MAX_OPEN_CONNS=30
