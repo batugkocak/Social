@@ -6,7 +6,13 @@ import (
 )
 
 func (app *application) healthCheckHandler(w http.ResponseWriter, r *http.Request) {
-	if err := writeJSON(w, http.StatusOK, "OK"); err != nil {
+	data := map[string]string{
+		"status":  "OK",
+		"env":     app.config.env,
+		"version": version,
+	}
+
+	if err := writeJSON(w, http.StatusOK, data); err != nil {
 		log.Print(err.Error())
 	}
 }
