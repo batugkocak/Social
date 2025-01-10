@@ -9,9 +9,13 @@ import (
 )
 
 func init() {
-	err := godotenv.Load()
+	curDir, err := os.Getwd()
 	if err != nil {
-		log.Printf("Warning: .env file not found")
+		log.Println(err)
+	}
+	loadErr := godotenv.Load(curDir + "/.env")
+	if loadErr != nil {
+		log.Fatalln("can't load env file from current directory: " + curDir)
 	}
 }
 
