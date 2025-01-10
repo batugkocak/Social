@@ -26,6 +26,7 @@ type Post struct {
 type PostRepository interface {
 	Create(context.Context, *Post) error
 	GetById(context.Context, int64) (*Post, error)
+	DeleteById(context.Context, int64) error
 }
 
 // PostRepository Implementation
@@ -76,4 +77,24 @@ func (s *PostStore) GetById(ctx context.Context, postID int64) (*Post, error) {
 		}
 	}
 	return &post, nil
+}
+
+func (s *PostStore) DeleteById(ctx context.Context, postID int64) error {
+	query := `
+	DELETE FROM posts 
+	WHERE id = $1`
+
+	result, err := s.db.ExecContext(ctx, query, postID)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rowsAffected == 0 {
+		return ErrNotFound
+	}
+	return nil
 }
