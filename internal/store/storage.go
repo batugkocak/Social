@@ -3,10 +3,12 @@ package store
 import (
 	"database/sql"
 	"errors"
+	"time"
 )
 
 var (
-	ErrNotFound = errors.New("Resource not found.")
+	ErrNotFound       = errors.New("Resource not found.")
+	QueryTimeDuration = time.Second * 5
 )
 
 // app.store.Posts.GetById()
