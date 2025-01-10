@@ -124,6 +124,9 @@ func (app *application) patchPostHandler(w http.ResponseWriter, r *http.Request)
 	if payload.Title != "" {
 		post.Title = payload.Title
 	}
+	if len(payload.Tags) > 0 {
+		post.Tags = payload.Tags
+	}
 
 	ctx := r.Context()
 
