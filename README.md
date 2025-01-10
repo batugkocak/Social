@@ -1,6 +1,9 @@
-# Social Media API
+# Social-Go
 
-A Go-based REST API for a social media platform with user management and post creation capabilities.
+A simple social media backend application built with Go.
+
+## Description
+This project implements a basic social media backend with user management, posts, and interactions.
 
 ## Features
 
@@ -16,16 +19,15 @@ A Go-based REST API for a social media platform with user management and post cr
 - Docker and Docker Compose
 - [Goose](https://github.com/pressly/goose) for database migrations
 
-## Getting Started
+## Setup
 
-### 1. Clone the repository
-
+1. Clone the repository
 ```bash
 git clone https://github.com/batugkocak/social-go.git
 cd social-go
 ```
 
-### 2. Environment Setup
+2. Environment Setup
 
 Create a `.env` file in the root directory:
 
@@ -38,7 +40,7 @@ DB_MAX_IDLE_CONNS=30
 DB_MAX_IDLE_TIME=15min
 ```
 
-### 3. Start Docker Services
+3. Start Docker Services
 
 ```bash
 docker-compose up -d
@@ -46,7 +48,7 @@ docker-compose up -d
 
 This will start the PostgreSQL database on port 5432.
 
-### 4. Database Migrations
+4. Database Migrations
 
 Install Goose:
 
@@ -71,7 +73,12 @@ To create a new migration:
 goose create name_of_your_migration sql
 ```
 
-### 5. Run the Application
+5. Seed the database (optional)
+```bash
+make seed
+```
+
+6. Run the Application
 
 ```bash
 # Run directly
