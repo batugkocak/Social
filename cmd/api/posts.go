@@ -53,7 +53,7 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func (app *application) getPostsHandler(w http.ResponseWriter, r *http.Request) {
+func (app *application) getPostHandler(w http.ResponseWriter, r *http.Request) {
 	postID := chi.URLParam(r, "postID")
 	fmt.Println(postID)
 	id, err := strconv.ParseInt(postID, 10, 64)
