@@ -19,6 +19,7 @@ type Comment struct {
 // Repository
 type CommentRepository interface {
 	GetByPostID(ctx context.Context, postID int64) (*[]Comment, error)
+	Create(ctx context.Context, comment *Comment) error
 }
 
 // Repository Implementation
@@ -33,6 +34,9 @@ func (s *CommentStore) GetByPostID(ctx context.Context, postID int64) (*[]Commen
 	JOIN users on users.id = c.user_id
 	WHERE c.post_id = $1
 	ORDER BY c.created_at DESC;`
+
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeDuration)
+	defer cancel()
 
 	rows, err := s.db.QueryContext(ctx, query, postID)
 	if err != nil {
@@ -51,4 +55,30 @@ func (s *CommentStore) GetByPostID(ctx context.Context, postID int64) (*[]Commen
 		comments = append(comments, c)
 	}
 	return &comments, nil
+}
+
+func (s *CommentStore) Create(ctx context.Context, comment *Comment) error {
+	query := `
+		INSERT INTO comments (post_id, user_id, content)
+		VALUES ($1, $2, $3)
+		RETURNING id, created_at
+	`
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeDuration)
+	defer cancel()
+
+	err := s.db.QueryRowContext(
+		ctx,
+		query,
+		comment.PostID,
+		comment.UserID,
+		comment.Content,
+	).Scan(
+		&comment.ID,
+		&comment.CreatedAt,
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
