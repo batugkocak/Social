@@ -1,4 +1,4 @@
-root = "./cmd/api/"
+root = "."
 testdata_dir = "testdata"
 tmp_dir = "bin"
 
