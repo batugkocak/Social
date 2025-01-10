@@ -27,6 +27,7 @@ type PostRepository interface {
 	Create(context.Context, *Post) error
 	GetById(context.Context, int64) (*Post, error)
 	DeleteById(context.Context, int64) error
+	UpdateById(ctx context.Context, post *Post) error
 }
 
 // PostRepository Implementation
@@ -97,4 +98,26 @@ func (s *PostStore) DeleteById(ctx context.Context, postID int64) error {
 		return ErrNotFound
 	}
 	return nil
+}
+
+func (s *PostStore) UpdateById(ctx context.Context, post *Post) error {
+	query := `
+	UPDATE posts
+	SET title = $1, content = $2, tags = $3, updated_at = $4
+	WHERE id = $5
+	`
+	result, err := s.db.ExecContext(ctx, query, post.Title, post.Content, pq.Array(post.Tags), post.UpdatedAt, post.ID)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return ErrNotFound
+	}
+	if rowsAffected == 0 {
+		return ErrNotFound
+	}
+	return nil
+
 }

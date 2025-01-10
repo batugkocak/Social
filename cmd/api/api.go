@@ -49,6 +49,7 @@ func (app *application) mount() http.Handler {
 				r.Get("/", app.getPostHandler)
 				r.Delete("/", app.deletePostHandler)
 			})
+			r.Patch("/", app.patchPostHandler)
 		})
 	})
 

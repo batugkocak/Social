@@ -115,6 +115,46 @@ func (app *application) deletePostHandler(w http.ResponseWriter, r *http.Request
 
 }
 
+type UpdatePostPayload struct {
+	ID      int64    `json:"id"`
+	Content string   `json:"content" validate:"required,max=100"`
+	Title   string   `json:"title" validate:"required,max=100"`
+	Tags    []string `json:"tags"`
+}
+
 func (app *application) patchPostHandler(w http.ResponseWriter, r *http.Request) {
+	var payload UpdatePostPayload
+	if err := readJSON(w, r, &payload); err != nil {
+		app.badRequestError(w, r, err)
+		return
+	}
+
+	if err := Validate.Struct(payload); err != nil {
+		app.badRequestError(w, r, err)
+		return
+	}
+
+	updatedPost := &store.Post{
+		ID:        payload.ID,
+		Title:     payload.Title,
+		Content:   payload.Content,
+		Tags:      payload.Tags,
+		UpdatedAt: time.Now(),
+	}
+
+	ctx := r.Context()
+
+	if err := app.store.Posts.UpdateById(ctx, updatedPost); err != nil {
+		switch {
+		case errors.Is(err, store.ErrNotFound):
+			app.notFoundError(w, r, err)
+			return
+		default:
+			app.internalServerError(w, r, err)
+			return
+		}
+	}
+
+	writeJSON(w, http.StatusOK, "Post Updated!")
 
 }
