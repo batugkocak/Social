@@ -106,7 +106,7 @@ func (s *PostStore) UpdateById(ctx context.Context, post *Post) error {
 	SET title = $1, content = $2, tags = $3, updated_at = $4
 	WHERE id = $5
 	`
-	result, err := s.db.ExecContext(ctx, query, post.Title, post.Content, pq.Array(post.Tags), post.UpdatedAt, post.ID)
+	result, err := s.db.ExecContext(ctx, query, post.Title, post.Content, pq.Array(post.Tags), time.Now(), post.ID)
 	if err != nil {
 		return err
 	}
