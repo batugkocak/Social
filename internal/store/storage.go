@@ -11,13 +11,15 @@ var (
 
 // app.store.Posts.GetById()
 type Storage struct {
-	Posts PostRepository
-	Users UserRepository
+	Posts    PostRepository
+	Users    UserRepository
+	Comments CommentRepository
 }
 
 func NewStorage(db *sql.DB) Storage {
 	return Storage{
-		Posts: &PostStore{db},
-		Users: &UserStore{db},
+		Posts:    &PostStore{db},
+		Users:    &UserStore{db},
+		Comments: &CommentStore{db},
 	}
 }
