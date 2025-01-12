@@ -2,10 +2,8 @@ package main
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/batugkocak/social/internal/store"
-	"github.com/go-chi/chi/v5"
 )
 
 // TODO: Validate if the post exists
@@ -15,12 +13,7 @@ type CreateCommentPayload struct {
 }
 
 func (app *application) createCommentHandler(w http.ResponseWriter, r *http.Request) {
-	postIDString := chi.URLParam(r, "postID")
-	postID, parseErr := strconv.ParseInt(postIDString, 10, 64)
-	if parseErr != nil {
-		app.internalServerError(w, r, parseErr)
-		return
-	}
+	postID := getPostFromCtx(r).ID
 
 	ctx := r.Context()
 	_, postErr := app.store.Posts.GetById(ctx, postID)
