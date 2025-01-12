@@ -17,7 +17,7 @@ type User struct {
 // UserRepository
 type UserRepository interface {
 	Create(context.Context, *User) error
-	GetById(context.Context, int64) (*User, error)
+	GetById(context.Context, int64) (*User, error) 
 }
 
 // UserRepository Implementation
