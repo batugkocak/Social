@@ -17,6 +17,7 @@ type User struct {
 // UserRepository
 type UserRepository interface {
 	Create(context.Context, *User) error
+	GetById(context.Context, int64) (*User, error)
 }
 
 // UserRepository Implementation
@@ -46,4 +47,35 @@ func (s *UserStore) Create(ctx context.Context, user *User) error {
 		return err
 	}
 	return nil
+}
+
+func (s *UserStore) GetById(ctx context.Context, userID int64) (*User, error) {
+	query := `
+		SELECT id, username, email, created_at
+		FROM users
+		WHERE id = $1
+	`
+
+	user := &User{}
+	err := s.db.QueryRowContext(
+		ctx,
+		query,
+		userID,
+	).Scan(
+		&user.ID,
+		&user.Username,
+		&user.Email,
+		&user.CreatedAt,
+	)
+
+	if err != nil {
+		switch err {
+		case sql.ErrNoRows:
+			return nil, ErrNotFound
+		default:
+			return nil, err
+		}
+	}
+
+	return user, nil
 }
