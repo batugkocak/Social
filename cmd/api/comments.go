@@ -2,18 +2,33 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/batugkocak/social/internal/store"
+	"github.com/go-chi/chi/v5"
 )
 
 // TODO: Validate if the post exists
 type CreateCommentPayload struct {
-	PostID  int64  `json:"post_id" validate:"required"`
 	UserID  int64  `json:"user_id" validate:"required"`
 	Content string `json:"content" validate:"required,max=100"`
 }
 
 func (app *application) createCommentHandler(w http.ResponseWriter, r *http.Request) {
+	postIDString := chi.URLParam(r, "postID")
+	postID, parseErr := strconv.ParseInt(postIDString, 10, 64)
+	if parseErr != nil {
+		app.internalServerError(w, r, parseErr)
+		return
+	}
+
+	ctx := r.Context()
+	_, postErr := app.store.Posts.GetById(ctx, postID)
+	if postErr != nil {
+		app.badRequestError(w, r, store.ErrNotFound)
+		return
+	}
+
 	var payload CreateCommentPayload
 	if err := readJSON(w, r, &payload); err != nil {
 		app.badRequestError(w, r, err)
@@ -26,11 +41,10 @@ func (app *application) createCommentHandler(w http.ResponseWriter, r *http.Requ
 	}
 
 	comment := &store.Comment{
-		PostID:  payload.PostID,
+		PostID:  postID,
 		UserID:  payload.UserID,
 		Content: payload.Content,
 	}
-	ctx := r.Context()
 
 	err := app.store.Comments.Create(ctx, comment)
 	if err != nil {
