@@ -37,7 +37,7 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 		Content: payload.Content,
 		Tags:    payload.Tags,
 		//TODO: Change after auth
-		UserId:    int64(mockUserId),
+		UserID:    int64(mockUserId),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
