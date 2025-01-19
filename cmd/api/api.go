@@ -50,11 +50,15 @@ func (app *application) mount() http.Handler {
 	r.Use(middleware.Timeout(60 * time.Second))
 
 	docsURL := fmt.Sprintf("%s/swagger/doc.json", app.config.addr)
+	// /v1
 	r.Route("/v1", func(r chi.Router) {
+		// v1/swagger
 		r.Get("/swagger/*", httpSwagger.Handler(
 			httpSwagger.URL(docsURL),
 		))
+		// v1/swagger
 
+		// v1/health
 		r.Get("/health", app.healthCheckHandler)
 		r.Route("/posts", func(r chi.Router) {
 			r.Post("/", app.createPostHandler)
@@ -66,6 +70,9 @@ func (app *application) mount() http.Handler {
 				r.Post("/comments", app.createCommentHandler)
 			})
 		})
+		// v1/health
+
+		// /v1/users
 		r.Route("/users", func(r chi.Router) {
 
 			r.Route("/{userID}", func(r chi.Router) {
@@ -78,8 +85,17 @@ func (app *application) mount() http.Handler {
 				r.Get("/feed", app.getUserFeedHandler)
 			})
 		})
+		// /v1/users
+
+		// /v1/authentication
+		r.Route("/authentication", func(r chi.Router) {
+			// r.Post("/user", app.registerUserHandler)
+			// r.Post("/token", app.createTokenHandler)
+		})
+		// /v1/authentication
 
 	})
+	// /v1
 
 	return r
 }
